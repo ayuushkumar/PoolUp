@@ -25,10 +25,14 @@
     "test": "jest --watchAll --verbose"
   },
   "devDependencies": {
+    "@shelf/jest-mongodb": "^6.0.0",
+    "@swc/jest": "^0.2.39",
+    "cross-env": "^10.1.0",
     "jest": "^30.2.0",
     "jsonwebtoken": "^9.0.2",
     "mongodb-memory-server": "^10.3.0",
     "nodemon": "^3.1.10",
+    "puppeteer": "^24.30.0",
     "supertest": "^7.1.4"
   }
 }

@@ -1,30 +1,33 @@
+// tests/db_setup.js
 const mongoose = require('mongoose');
-const { MongoMemoryServer } = require('mongodb-memory-server');
+const { initializeAdminUser } = require('../config/adminSetup');
+const User = require('../models/User');
+const Carpool = require('../models/Carpool');
+const Chat = require('../models/Chat');
 
-let mongoServer;
+const mongooseOptions = {
+  serverSelectionTimeoutMS: 5000 // Wait up to 5 seconds
+};
 
-// 1. Connect to the in-memory database before running any tests
 module.exports.connect = async () => {
-    // Close any existing connection to prevent errors
-    await mongoose.disconnect();
-    
-    mongoServer = await MongoMemoryServer.create();
-    const uri = mongoServer.getUri();
-    
-    await mongoose.connect(uri);
+  // 1. Connect the test runner's Mongoose instance
+  // We use process.env.MONGO_URI set by the preset
+  await mongoose.connect(process.env.MONGO_URI, mongooseOptions);
 };
 
-// 2. Clear the database after each test (so tests don't affect each other)
 module.exports.clearDatabase = async () => {
-    const collections = mongoose.connection.collections;
-    for (const key in collections) {
-        const collection = collections[key];
-        await collection.deleteMany();
-    }
+  // 1. Clear all models
+  await Promise.all([
+    User.deleteMany(),
+    Carpool.deleteMany(),
+    Chat.deleteMany()
+  ]);
+  
+  // 2. Re-create the admin user
+  await initializeAdminUser();
 };
 
-// 3. Disconnect and stop the server after all tests are done
 module.exports.closeDatabase = async () => {
-    await mongoose.disconnect();
-    await mongoServer.stop();
+  // 1. Disconnect the test runner's Mongoose instance
+  await mongoose.disconnect();
 };
