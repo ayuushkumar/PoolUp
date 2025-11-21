@@ -43,6 +43,8 @@ const localConnections = new Map(); // Key: carpoolId, Value: Set of connected w
 const cacheClient = redis.createClient({ url: REDIS_URL });
 cacheClient.connect().catch(console.error);
 
+module.exports = { app, server };
+
 function broadcastToLocalClients(carpoolId, message) {
     if (!localConnections.has(carpoolId)) return;
     localConnections.get(carpoolId).forEach(ws => {
