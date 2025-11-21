@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-
+// Define the Carpool Schema
 const carpoolSchema = new mongoose.Schema({
     userId: {
         type: mongoose.Schema.Types.ObjectId,
